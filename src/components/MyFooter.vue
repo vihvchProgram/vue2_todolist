@@ -13,9 +13,7 @@ export default {
   name: 'MyFooter',
   components: {},
   props: {
-    todos: Array,
-    checkAllTodo: Function,
-    clearAllTodo: Function
+    todos: Array
   },
   data () {
     return {}
@@ -33,7 +31,7 @@ export default {
         return this.doneTotal === this.total && this.total > 0
       },
       set (value) {
-        this.checkAllTodo(value)
+        this.$emit('checkAllTodo', value)
       }
     }
   },
@@ -42,7 +40,7 @@ export default {
   mounted () {},
   methods: {
     clearAll () {
-      this.clearAllTodo()
+      this.$emit('clearAllTodo')
     }
   }
 }
