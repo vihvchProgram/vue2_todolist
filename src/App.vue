@@ -1,32 +1,121 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+  <div id="root">
+    <div class="todo-container">
+      <div class="todo-wrap">
+        <MyHeader :addTodo="addTodo" />
+        <MyList :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo" />
+        <MyFooter :todos="todos" :checkAllTodo="checkAllTodo" :clearAllTodo="clearAllTodo" />
+      </div>
     </div>
-    <router-view/>
   </div>
 </template>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import MyHeader from './components/MyHeader.vue'
+import MyList from './components/MyList.vue'
+import MyFooter from './components/MyFooter.vue'
 
-#nav {
-  padding: 30px;
+// 數據結構
+// todos: [
+//   { id: '001', title: '閱讀', done: true },
+//   { id: '002', title: '彈琴', done: false },
+//   { id: '003', title: '繪畫', done: true }
+// ]
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+export default {
+  name: 'App',
+  components: { MyHeader, MyList, MyFooter },
+  props: {},
+  data () {
+    return {
+      todos: JSON.parse(localStorage.getItem('todos')) || []
+    }
+  },
+  computed: {},
+  watch: {
+    todos: {
+      deep: true,
+      handler (value) {
+        localStorage.setItem('todos', JSON.stringify(value))
+      }
+    }
+  },
+  created () {},
+  mounted () {},
+  methods: {
+    // 添加一個todo
+    addTodo (todoObj) {
+      this.todos.unshift(todoObj)
+    },
+    // 勾選or取消勾選一個todo
+    checkTodo (id) {
+      this.todos.forEach((todo) => {
+        if (todo.id === id) todo.done = !todo.done
+      })
+    },
+    // 刪除一個todo
+    deleteTodo (id) {
+      this.todos = this.todos.filter((todo) => {
+        return todo.id !== id
+      })
+    },
+    // 全選or取消全選
+    checkAllTodo (done) {
+      this.todos.forEach((todo) => {
+        todo.done = done
+      })
+    },
+    // 清除所有已經完成的todo
+    clearAllTodo () {
+      this.todos = this.todos.filter((todo) => {
+        return !todo.done
+      })
     }
   }
+}
+</script>
+
+<style lang="less">
+/*base*/
+body {
+  background: #fff;
+}
+
+.btn {
+  display: inline-block;
+  padding: 4px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.btn-danger {
+  color: #fff;
+  background-color: #da4f49;
+  border: 1px solid #bd362f;
+}
+
+.btn-danger:hover {
+  color: #fff;
+  background-color: #bd362f;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.todo-container {
+  width: 600px;
+  margin: 0 auto;
+}
+.todo-container .todo-wrap {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 </style>
