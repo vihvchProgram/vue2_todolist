@@ -3,8 +3,12 @@
     <div class="todo-container">
       <div class="todo-wrap">
         <MyHeader @addTodo="addTodo" />
-        <MyList :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo" />
-        <MyFooter :todos="todos" @checkAllTodo="checkAllTodo" @clearAllTodo="clearAllTodo" />
+        <MyList :todos="todos" />
+        <MyFooter
+          :todos="todos"
+          @checkAllTodo="checkAllTodo"
+          @clearAllTodo="clearAllTodo"
+        />
       </div>
     </div>
   </div>
@@ -41,7 +45,14 @@ export default {
     }
   },
   created () {},
-  mounted () {},
+  mounted () {
+    this.$bus.$on('checkTodo', this.checkTodo)
+    this.$bus.$on('deleteTodo', this.deleteTodo)
+  },
+  beforeDestroy () {
+    this.$bus.$off('checkTodo')
+    this.$bus.$off('deleteTodo')
+  },
   methods: {
     // 添加一個todo
     addTodo (todoObj) {
@@ -90,7 +101,8 @@ body {
   text-align: center;
   vertical-align: middle;
   cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.05);
   border-radius: 4px;
 }
 

@@ -1,7 +1,11 @@
 <template>
   <li>
     <label>
-      <input type="checkbox" :checked="todo.done" @change="handleCheck(todo.id)" />
+      <input
+        type="checkbox"
+        :checked="todo.done"
+        @change="handleCheck(todo.id)"
+      />
       <span>{{ todo.title }}</span>
     </label>
     <button class="btn btn-danger" @click="handleDelete(todo.id)">刪除</button>
@@ -14,9 +18,7 @@ export default {
   components: {},
   // 聲明接收todo對象
   props: {
-    todo: Object,
-    checkTodo: Function,
-    deleteTodo: Function
+    todo: Object
   },
   data () {
     return {}
@@ -29,12 +31,12 @@ export default {
     // 勾選or取消勾選
     handleCheck (id) {
       // 通知App組件 將對應的todo對象的done值取反
-      this.checkTodo(id)
+      this.$bus.$emit('checkTodo', id)
     },
     // 刪除
     handleDelete (id) {
       if (confirm('確定要刪除嗎? ')) {
-        this.deleteTodo(id)
+        this.$bus.$emit('deleteTodo', id)
       }
     }
   }
