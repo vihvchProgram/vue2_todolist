@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
 import MyHeader from './components/MyHeader.vue'
 import MyList from './components/MyList.vue'
 import MyFooter from './components/MyFooter.vue'
@@ -47,11 +48,13 @@ export default {
   created () {},
   mounted () {
     this.$bus.$on('checkTodo', this.checkTodo)
-    this.$bus.$on('deleteTodo', this.deleteTodo)
+    // this.$bus.$on('deleteTodo', this.deleteTodo)
+    this.pubId = pubsub.subscribe('deleteTodo', this.deleteTodo)
   },
   beforeDestroy () {
     this.$bus.$off('checkTodo')
-    this.$bus.$off('deleteTodo')
+    // this.$bus.$off('deleteTodo')
+    pubsub.unsubscribe(this.pubId)
   },
   methods: {
     // 添加一個todo
@@ -65,7 +68,8 @@ export default {
       })
     },
     // 刪除一個todo
-    deleteTodo (id) {
+    // deleteTodo (id) {
+    deleteTodo (_, id) {
       this.todos = this.todos.filter((todo) => {
         return todo.id !== id
       })

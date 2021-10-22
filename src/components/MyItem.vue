@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import pubsub from 'pubsub-js'
 export default {
   name: 'MyItem',
   components: {},
@@ -36,7 +37,8 @@ export default {
     // 刪除
     handleDelete (id) {
       if (confirm('確定要刪除嗎? ')) {
-        this.$bus.$emit('deleteTodo', id)
+        // this.$bus.$emit('deleteTodo', id)
+        pubsub.publish('deleteTodo', id)
       }
     }
   }
